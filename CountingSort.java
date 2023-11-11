@@ -1,99 +1,67 @@
-public class CountingSort {    
+public class CountingSort {
 
-    // Attribute untuk menyimpan data
-    private int[] data;
-
-    // konstruktor
-    public CountingSort(int[] data){
-        this.data = data;
-    }
-
-    // getter
-    public int[] getData() {
-        return this.data;
-    }
-
-    // setter
-    public void setData(int[] data) {
-        this.data = data;
-    }
-    
-    // method untuk mencetak
-    public void printArray(){
-
-        // cetak satu persatu
-        for (int i = 0; i < data.length; i++){
-            System.out.print(data[i] + " ");
+    public static void sort(int[] array) {
+        
+        // cari nilai max dan min dari array
+        int max = array[0];
+        int min = array[0];
+        for (int value : array) {
+            if (value > max) {
+                max = value;
+            }
         }
+     
         
-        
-        System.out.println();
-
-    }
-
-    // method untuk mengurutkan
-    public void sort(){
-
-        // cari nilai max dan min dari data
-        int max = data[0];
-        int min = data[0];
-        for (int i = 1; i < data.length; i++){
-            if (data[i] > max){
-                max= data[i];
-            } 
-
-            if (data[i] < min) {
-                min = data[i];
+        for (int value : array) {
+            if (value < min) {
+                min = value;
             }
         }
 
-        // Array penampung sementara
-        int[] count = new int[max - min +1];
+        int range = max - min + 1;
 
-        // hitung frekuensi setiap elemen data
-        for (int i = 0; i < data.length; i++){
-            count[data[i] - min]++;
+        int[] count = new int[range];
+        int[] output = new int[array.length];
+
+        // Menghitung frekuensi kemunculan setiap elemen
+        for (int i = 0; i < array.length; i++) {
+            count[array[i] - min]++;
         }
 
-        // hitung jumlah elemen yang kurang dari atau sama dengan setiap elemen data
-        for (int i = 1; i < count.length; i++){
-            count[i] += count [i -1];
+        // Menghitung prefix sum
+        for (int i = 1; i < range; i++) {
+            count[i] += count[i - 1];
         }
 
-        // buat aray baru
-        int[] sorted = new int[data.length];
-
-        // salin elemen data ke array baru sesuai posisi yang dietentukan array sementara
-        for (int i = data.length - 1; i >= 0; i--){
-            sorted[count[data[i] - min] - 1] = data[i];
-            count[data[i] - min]--;
+        // Membangun array output
+        for (int i = array.length - 1; i >= 0; i--) {
+            output[count[array[i] - min] - 1] = array[i];
+            count[array[i] - min]--;
         }
 
-        // saling kembali ke array asli
-        for (int i = 0; i < data.length; i++){
-            data[i] = sorted[i];
-        }
+        // Menyalin array output ke array asli
+        System.arraycopy(output, 0, array, 0, array.length);
     }
 
-    // terakhir buat main method
-    public static void main(String[] args){
-        // tentukan nilai data
-        int[] data = { 25, 12, 34, 61, 74, 30 };
+    private static void printArray(int[] data) {
+        for (int value : data) {
+            System.out.print(value + " ");
+        }
+        System.out.println();
+    }
 
-        // Buat objek 
-        CountingSort cs = new CountingSort(data); 
+    public static void main(String[] args) {
+        // nilai data
+        int[] data = { 25, 12, 34, 61, 74, 30 }; 
 
-        // Mencetak data sebelum diurutkan
         System.out.println("Data sebelum diurutkan:");
-        cs.printArray();
+        printArray(data);
 
-        // Mengurutkan data dengan metode sort
-        cs.sort();
+        sort(data);
 
-        // Mencetak data setelah diurutkan
-        System.out.println("Data setelah diurutkan:");
-        cs.printArray();
-
+        System.out.println("\nData setelah diurutkan:");
+        printArray(data);
     }
 
+    
 }
